@@ -18,7 +18,7 @@ class Application{
     Blocks.init()
     Views.init()
 
-    InputLib.init()
+    new InputLib('./response.json')
   }
 }
 

@@ -2,18 +2,22 @@ window.$ = window.jQuery = require('jquery');
 import swal from 'sweetalert2'
 import 'sweetalert2/dist/sweetalert2.css'
 
-export default {
+export default class InputLib{
 
-  init() {
+  constructor (ajaxUrl){
+    this.init(ajaxUrl)
+  }
+
+  init(ajaxUrl) {
     this._findAllInputs()
-    this._changingInputValue()
-  },
+    this._changingInputValue(ajaxUrl)
+  }
 
   _findAllInputs(){
     this.inputs = document.getElementsByTagName('input')
-  },
+  }
 
-  _changingInputValue(){
+  _changingInputValue(ajaxUrl){
     [].forEach.call(this.inputs, (input) => {
       input.addEventListener('input', () => {
         let value = input.value
@@ -25,7 +29,7 @@ export default {
           successBlock.style.display = "block"
           errorBlock.style.display = "none"
 
-          this._sendEmailValue(value)
+          this._sendEmailValue(value, ajaxUrl)
 
         }else{
           errorBlock.style.display = "block"
@@ -33,21 +37,21 @@ export default {
         }
       });
     })
-  },
+  }
 
   _checkAnEmail(elem){
     let expr = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     return expr.test(elem);
-  },
+  }
 
-  _sendEmailValue(value){
+  _sendEmailValue(value, ajaxUrl){
 
     clearTimeout(this.sendTimeout)
 
     this.sendTimeout = setTimeout(() => {
       $.ajax({
-        url: './response.json',
-        type: 'POST',
+        url: ajaxUrl,
+        type: 'GET',
         data: value,
         success: (data) => {
           swal(
