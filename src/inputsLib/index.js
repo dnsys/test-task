@@ -5,19 +5,20 @@ import 'sweetalert2/dist/sweetalert2.css'
 export default class InputLib{
 
   constructor (ajaxUrl){
-    this.init(ajaxUrl)
+    this.ajaxUrl = ajaxUrl
+    this.init()
   }
 
-  init(ajaxUrl) {
+  init() {
     this._findAllInputs()
-    this._changingInputValue(ajaxUrl)
+    this._changingInputValue()
   }
 
   _findAllInputs(){
     this.inputs = document.getElementsByTagName('input')
   }
 
-  _changingInputValue(ajaxUrl){
+  _changingInputValue(){
     [].forEach.call(this.inputs, (input) => {
       input.addEventListener('input', () => {
         let value = input.value
@@ -29,7 +30,7 @@ export default class InputLib{
           successBlock.style.display = "block"
           errorBlock.style.display = "none"
 
-          this._sendEmailValue(value, ajaxUrl)
+          this._sendEmailValue(value)
 
         }else{
           errorBlock.style.display = "block"
@@ -44,13 +45,13 @@ export default class InputLib{
     return expr.test(elem);
   }
 
-  _sendEmailValue(value, ajaxUrl){
+  _sendEmailValue(value){
 
     clearTimeout(this.sendTimeout)
 
     this.sendTimeout = setTimeout(() => {
       $.ajax({
-        url: ajaxUrl,
+        url: this.ajaxUrl,
         type: 'GET',
         data: value,
         success: (data) => {
