@@ -4,8 +4,14 @@ import 'sweetalert2/dist/sweetalert2.css'
 
 export default class InputLib{
 
-  constructor (ajaxUrl){
-    this.ajaxUrl = ajaxUrl
+  constructor ( options ){
+    this.defaultOptions = {
+      url : './response.json',
+      type: 'get'
+    }
+
+    this.options = Object.assign( {}, this.defaultOptions, options )
+
     this.init()
   }
 
@@ -51,8 +57,8 @@ export default class InputLib{
 
     this.sendTimeout = setTimeout(() => {
       $.ajax({
-        url: this.ajaxUrl,
-        type: 'GET',
+        url: this.options.url,
+        type: this.options.type,
         data: value,
         success: (data) => {
           swal(
