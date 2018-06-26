@@ -51,25 +51,23 @@ export default class InputLib{
   }
 
   _sendEmailValue(value){
+    let requestOptions = {
+      method: this.options.type,
+      body: value
+    }
 
     clearTimeout(this.sendTimeout)
 
     this.sendTimeout = setTimeout(() => {
-      $.ajax({
-        url: this.options.url,
-        type: this.options.type,
-        data: value,
-        success: data => {
-          this.modalMessage = 'Field value was sent'
-          let sendStatus = data.status
-          this.options.callbacks.afterInputsSent(sendStatus, this.modalMessage)
-        },
-        error: data => {
-          let sendStatus = 'error'
-          this.modalMessage = 'Error'
-          this.options.callbacks.afterInputsSent(sendStatus, this.modalMessage)
-        }
-      })
+      fetch(this.options.url, requestOptions)
+        .then(response => {
+          response.json().then(json => {
+            this.options.callbacks.afterInputsSent(json.status, json.message)
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }, 1000)
 
   }

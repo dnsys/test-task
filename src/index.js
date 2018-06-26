@@ -22,6 +22,8 @@ class Application{
     Views.init()
 
     let options = {
+      url: './response.json',
+      type: 'post',
       callbacks: {
         afterInputsSent: function(sendStatus, modalMessage){
           swal(
