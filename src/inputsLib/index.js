@@ -1,13 +1,12 @@
-window.$ = window.jQuery = require('jquery');
-import swal from 'sweetalert2'
-import 'sweetalert2/dist/sweetalert2.css'
-
 export default class InputLib{
 
   constructor ( options ){
     this.defaultOptions = {
       url : './response.json',
-      type: 'get'
+      type: 'get',
+      callbacks: {
+        afterInputsSent: (status, modalMessage) => {}
+      }
     }
 
     this.options = Object.assign( {}, this.defaultOptions, options )
@@ -60,12 +59,15 @@ export default class InputLib{
         url: this.options.url,
         type: this.options.type,
         data: value,
-        success: (data) => {
-          swal(
-            'Congrats!',
-            'Field value was sent',
-            data.success
-          )
+        success: data => {
+          this.modalMessage = 'Field value was sent'
+          let sendStatus = data.status
+          this.options.callbacks.afterInputsSent(sendStatus, this.modalMessage)
+        },
+        error: data => {
+          let sendStatus = 'error'
+          this.modalMessage = 'Error'
+          this.options.callbacks.afterInputsSent(sendStatus, this.modalMessage)
         }
       })
     }, 1000)

@@ -1,6 +1,9 @@
 window.$ = window.jQuery = require('jquery');
 window.Popper = require('popper.js').default;
 
+import swal from 'sweetalert2'
+import 'sweetalert2/dist/sweetalert2.css'
+
 require('bootstrap');
 import 'bootstrap/scss/bootstrap.scss'
 
@@ -18,7 +21,19 @@ class Application{
     Blocks.init()
     Views.init()
 
-    new InputLib()
+    let options = {
+      callbacks: {
+        afterInputsSent: function(sendStatus, modalMessage){
+          swal(
+            'Congrats!',
+            modalMessage,
+            sendStatus
+          )
+        }
+      }
+    }
+
+    let inputLib = new InputLib(options)
   }
 }
 
